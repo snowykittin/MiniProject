@@ -2,9 +2,10 @@ import java.awt.*;
 
 public class Paddle {
     private int x, y;
-    private final int WIDTH = 75, HEIGHT = 15;
+    private final int WIDTH = 125, HEIGHT = 15;
     Board board;
     Game game;
+    private int dx = 300;
 
     public Paddle(Board board, Game game){
         y = 0;
@@ -17,6 +18,11 @@ public class Paddle {
         this.x = x - WIDTH/2;
         this.y = y - HEIGHT/2;
     }
+
+    public Rectangle getBounds(){
+        return new Rectangle(x, y, WIDTH, HEIGHT);
+    }
+
 
     public void paint(Graphics g){
         g.fillRect(x,y,WIDTH,HEIGHT);

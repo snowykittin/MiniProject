@@ -3,7 +3,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class Board extends JPanel /*implements ActionListener*/{
+public class Board extends JPanel implements ActionListener{
     final int WIDTH = 800;
     final int HEIGHT = 600;
 
@@ -12,6 +12,8 @@ public class Board extends JPanel /*implements ActionListener*/{
 
     Ball ball;
     Paddle paddle;
+    Enemy enemy;
+    Enemy[][] enemies = new Enemy[5][15];
     Timer timer;
 
     public Board(Game game){
@@ -24,9 +26,14 @@ public class Board extends JPanel /*implements ActionListener*/{
 
     public void init(){
         ball.setPosition(WIDTH/2,HEIGHT/3*2);
-        paddle.setPosition(WIDTH/2, HEIGHT/6*5);
-        /*timer = new Timer(1000/60,this);
-        timer.start();*/
+        paddle.setPosition(WIDTH/2, HEIGHT/7*6);
+        for(int row = 0; row < 5; row++){
+            for(int col = 0; col < 15; col++){
+                enemies[row][col] = new Enemy(getWidth()/50 + (col*50), (row*50)+20);
+            }
+        }
+        timer = new Timer(1000/60,this);
+        timer.start();
     }
 
     public void paintComponent(Graphics g){
@@ -34,5 +41,19 @@ public class Board extends JPanel /*implements ActionListener*/{
         g.setColor(Color.WHITE);
         ball.paint(g);
         paddle.paint(g);
+        for(int row = 0; row < 5; row++){
+            for(int col = 0; col < 15; col++){
+                if(enemies[row][col] != null){
+                    enemies[row][col].paint(g);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        ball.checkCollisions(paddle);
+        ball.move();
+        repaint();
     }
 }
