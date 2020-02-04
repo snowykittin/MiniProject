@@ -6,22 +6,24 @@ import java.awt.event.ActionListener;
 public class Board extends JPanel implements ActionListener{
     final int WIDTH = 800;
     final int HEIGHT = 600;
-
-    private final int EDGESPACE = 25;
-    private int pScore = 0;
+    int score = 0;
 
     Ball ball;
     Paddle paddle;
     Enemy enemy;
     Enemy[][] enemies = new Enemy[5][15];
     Timer timer;
+    Game game;
 
     public Board(Game game){
+        this.game = game;
         setPreferredSize(new Dimension(WIDTH,HEIGHT));
         setBackground(Color.BLACK);
 
         ball = new Ball(this);
         paddle = new Paddle(this, game);
+        timer = new Timer(1000/60,this);
+        timer.start();
     }
 
     public void init(){
@@ -32,8 +34,7 @@ public class Board extends JPanel implements ActionListener{
                 enemies[row][col] = new Enemy(getWidth()/50 + (col*50), (row*50)+20);
             }
         }
-        timer = new Timer(1000/60,this);
-        timer.start();
+
     }
 
     public void paintComponent(Graphics g){
@@ -50,10 +51,34 @@ public class Board extends JPanel implements ActionListener{
         }
     }
 
+
+    public void checkEnemyCollisions(){
+        for(int j = 0; j < enemies.length; j++){
+            for(int k = 0; k < enemies[0].length; k++){
+                if(enemies[j][k] != null){
+                    if(ball.getBounds().intersects(enemies[j][k].getBounds())){
+                        ball.setDy(ball.getDy()*-1);
+                        enemies[j][k] = null;
+                        score += 100;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         ball.checkCollisions(paddle);
+        checkEnemyCollisions();
         ball.move();
+        if(game.isLeftPressed() && (paddle.getX() > 0)){
+            paddle.moveLeft();
+        }
+
+        if(game.isRightPressed() && (paddle.getX()+ paddle.getWIDTH()) < getWidth()){
+            paddle.moveRight();
+        }
         repaint();
     }
 }

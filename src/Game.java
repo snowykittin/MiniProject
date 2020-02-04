@@ -14,10 +14,12 @@ public class Game extends JFrame implements KeyListener{
 
         board = new Board(this);
         add(board);
+        addKeyListener(this);
         pack();
 
-        setLocationRelativeTo(null);
         board.init();
+        setLocationRelativeTo(null);
+
     }
 
     public static void main(String[] args){

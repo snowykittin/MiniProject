@@ -7,6 +7,7 @@ public class Ball {
     double dx = SPEED, dy = SPEED;
 
     Board board;
+    Enemy[][] enemies;
 
     public Ball(Board board){
         x = 0;
@@ -27,10 +28,12 @@ public class Ball {
     public void checkCollisions(Paddle other){
         if(getBounds().intersects(other.getBounds())){
             if(x < board.getWidth()/2){
-                dx *= -1;
+                dy *= -1;
+                setPosition(x, y+1);
             }
             if(x > board.getWidth()/2){
-                dx *= -1;
+                dy *= -1;
+                setPosition(x, y-1);
             }
         }
     }
@@ -49,25 +52,10 @@ public class Ball {
         y += dy;
     }
 
-    public int getX() {
-        return x;
-    }
 
-    public int getY() {
-        return y;
-    }
+    public void setDy(double dy){this.dy = dy;}
 
-    public void setY(int y) {
-        this.y = y;
-    }
-
-    public int getDiameter() {
-        return diameter;
-    }
-
-    public void setX(int x) {
-        this.x = x;
-    }
+    public double getDy(){return dy;}
 
     public void paint(Graphics g){
         g.fillOval(x,y,diameter,diameter);
